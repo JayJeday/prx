@@ -4,5 +4,5 @@ export interface Medicaments{
     Brand?:string;
     Description?:string;
     OrientationType?:string;
-
+    
 }

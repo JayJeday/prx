@@ -1,7 +1,6 @@
-<!-- Table of doctors -->
 <div class="mat-elevation-z8">
   
-    <mat-table [dataSource]="this.doctorData"  matSort>
+    <mat-table [dataSource]="this.patientData"  matSort>
       
       <ng-container matColumnDef="ID">
         <mat-header-cell *matHeaderCellDef  mat-sort-header>ID</mat-header-cell>
@@ -18,9 +17,9 @@
         <mat-cell *matCellDef="let element">{{element.LastName}}</mat-cell>
       </ng-container>
      
-      <ng-container matColumnDef="license">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>License</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.license}}</mat-cell>
+      <ng-container matColumnDef="Telephone">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Telephone</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.Telephone}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="actions">
@@ -44,9 +43,10 @@
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-          <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': this.doctorData != null}"></mat-footer-row>
-          <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!( this.doctorData != null && this.doctorData.length == 0 )}"></mat-footer-row>
+          <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': this.patientData != null}"></mat-footer-row>
+          <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!( this.patientData != null && this.patientData.length == 0 )}"></mat-footer-row>
        
     </mat-table>
 
   </div>
+

@@ -1,0 +1,48 @@
+<form [formGroup]="prescForm" #sForm="ngForm" [hidden]="success" (ngSubmit)="sForm.valid && searchForm()">
+
+  <div class="row">
+
+    <div class="col-md-4">
+
+    <mat-form-field>
+        <input matInput placeholder="First Name" formControlName="FirstName">
+    </mat-form-field>
+
+   </div>
+
+   <div class="col-md-4"> 
+
+    <mat-form-field>
+        <input matInput placeholder="Last Name" formControlName="LastName">
+    </mat-form-field>
+
+   </div>
+    
+    </div>
+
+    <div class="row">
+
+      <div class="col-md-4">
+
+     <mat-form-field>
+                    <input matInput placeholder="Telephone" formControlName="telephone">
+    </mat-form-field>
+
+     </div>
+
+    
+   <div class="col-md-4">
+
+    <mat-form-field >
+        <mat-select formControlName="StatusId"  placeholder="Select Status">
+          <mat-option [value]="aStatus.ID" *ngFor="let aStatus of statusList">{{aStatus.Title}} </mat-option>
+        </mat-select>
+     </mat-form-field>
+
+    </div>
+
+    </div>
+
+    <button mat-raised-button type="submit" color="primary">Search</button>
+
+</form>

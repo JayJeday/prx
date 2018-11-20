@@ -1,0 +1,57 @@
+<div class="mat-elevation-z8">
+  
+    <mat-table [dataSource]="this.prescData"  matSort>
+      
+      <ng-container matColumnDef="ID">
+        <mat-header-cell *matHeaderCellDef  mat-sort-header>ID</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.ID}}</mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="Description">
+        <mat-header-cell *matHeaderCellDef  mat-sort-header>Description</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.Description}}</mat-cell>
+      </ng-container>
+     
+      <ng-container matColumnDef="PatientName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Patient Name</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.PatientName}}</mat-cell>
+      </ng-container>
+     
+      <ng-container matColumnDef="PatientLastName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Patient Last Name</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.PatientLastName}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.Description}}</mat-cell>
+        </ng-container>
+      
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button  (click)="onEdit(row.ID)"><mat-icon>launch</mat-icon></button>   
+         </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="loading">
+            <mat-footer-cell *matFooterCellDef colspan="6">
+              Loading data...
+            </mat-footer-cell>
+          </ng-container>
+          <ng-container matColumnDef="noData">
+            <mat-footer-cell *matFooterCellDef colspan="6">
+              No data.
+            </mat-footer-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+          <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': this.prescData != null}"></mat-footer-row>
+          <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!( this.prescData != null && this.prescData.length == 0 )}"></mat-footer-row>
+       
+    </mat-table>
+
+  </div>
