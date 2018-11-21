@@ -1,4 +1,4 @@
-<form [formGroup]="prescForm" #sForm="ngForm" [hidden]="success" (ngSubmit)="sForm.valid && searchForm()">
+<form [formGroup]="prescForm" #sForm="ngForm" (ngSubmit)="sForm.valid && searchForm()">
 
   <div class="row">
 
@@ -34,7 +34,7 @@
    <div class="col-md-4">
 
     <mat-form-field >
-        <mat-select formControlName="StatusId"  placeholder="Select Status">
+        <mat-select formControlName="status"  placeholder="Select Status">
           <mat-option [value]="aStatus.ID" *ngFor="let aStatus of statusList">{{aStatus.Title}} </mat-option>
         </mat-select>
      </mat-form-field>
@@ -46,3 +46,69 @@
     <button mat-raised-button type="submit" color="primary">Search</button>
 
 </form>
+
+<!--Prescription loaded-->
+
+<mat-spinner *ngIf="loading"></mat-spinner>
+
+<div class="mat-elevation-z8" *ngIf="loaded && !loading">
+  
+  <mat-table [dataSource]="this.prescData"  matSort>
+    
+    <ng-container matColumnDef="ID">
+      <mat-header-cell *matHeaderCellDef  mat-sort-header>ID</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.ID}}</mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="Description">
+      <mat-header-cell *matHeaderCellDef  mat-sort-header>Description</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.Description}}</mat-cell>
+    </ng-container>
+   
+    <ng-container matColumnDef="PatientName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>FirstName</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.Patient.FirstName}}</mat-cell>
+    </ng-container>
+   
+    <ng-container matColumnDef="PatientLastName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>LastName</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.Patient.LastName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.status.Title}}</mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="doctor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Doctor</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.Doctor.LastName}}</mat-cell>
+      </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button mat-icon-button  (click)="onViewPresc(row.ID)" style="color:darkred">launch</button>   
+       </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="loading">
+          <mat-footer-cell *matFooterCellDef colspan="6">
+            Loading data...
+          </mat-footer-cell>
+        </ng-container>
+        <ng-container matColumnDef="noData">
+          <mat-footer-cell *matFooterCellDef colspan="6">
+            No data.
+          </mat-footer-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+        <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': this.prescData != null}"></mat-footer-row>
+        <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!( this.prescData != null && this.prescData.length == 0 )}"></mat-footer-row>
+     
+  </mat-table>
+
+</div>

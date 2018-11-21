@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Prescription } from '../core/models/prescription.model';
-import { Http } from '@angular/http';
 import { PrescriptionService } from '../core/services/prescription.service';
+import { MatDialog } from '@angular/material';
+import { PrescDetailComponent } from './presc-detail/presc-detail.component';
 
 @Component({
   selector: 'app-prescriptions',
@@ -16,22 +17,34 @@ export class PrescriptionsComponent implements OnInit {
   prescData: MatTableDataSource<any>;
 
   //columns
-  displayedColumns: string[] = ['ID', 'Description', 'PatientName', 'PatientLastName','status', 'actions'];
+  displayedColumns: string[] = ['ID', 'Description', 'PatientName', 'PatientLastName','status','doctor', 'actions'];
 
-  constructor(private prescService:PrescriptionService) { }
+  constructor(private prescService:PrescriptionService,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
 
     this.prescService.getPrescriptions().subscribe((data)=>{
       
-      console.log(data);
-      
       this.prescriptions = data;
      
+      console.log(this.prescriptions[0].Doctor.FirstName);
+
       this.prescData = new MatTableDataSource(this.prescriptions);
 
     });
 
+  }
+
+  onViewTest(){
+    
+  }
+  
+  onViewPresc(row){
+    const dialogRef = this.dialog.open(PrescDetailComponent, {
+      width: '60%',
+      data:{id:row}
+   });
   }
 
 }

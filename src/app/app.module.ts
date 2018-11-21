@@ -22,6 +22,10 @@ import { PrescriptionsComponent } from './prescriptions/prescriptions.component'
 import { PrescSearchFormComponent } from './prescriptions/presc-search-form/presc-search-form.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PrescDetailComponent } from './prescriptions/presc-detail/presc-detail.component';
+import { PatientDetailComponent } from './patients/patient-detail/patient-detail.component';
+import { MedicationsDetailComponent } from './medications/medications-detail/medications-detail.component';
+import { DoctorsDetailComponent } from './medications/doctors-detail/doctors-detail.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PatientsComponent,
     PrescriptionsComponent,
     PrescSearchFormComponent,
-    HeaderComponent
+    HeaderComponent,
+    PrescDetailComponent,
+    PatientDetailComponent,
+    MedicationsDetailComponent,
+    DoctorsDetailComponent
   ],
   imports: [
     FormsModule,
@@ -52,8 +60,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PrescriptionService,
     SpecializationService,
     StatusService,
-   {provide: APP_BASE_HREF, useValue : '/sites/sharestack/JC-site/Pages/default.aspx'}
+    
+  //  {provide: APP_BASE_HREF, useValue : '/sites/sharestack/JC-site/Pages/default.aspx'}
   ],
+  entryComponents: [PrescDetailComponent],
   bootstrap: [AppComponent]
 })
 

@@ -1,0 +1,38 @@
+<div mat-dialog-content>
+ 
+  <div class="col-md-12">
+ 
+        <form class="pres-form" #presForm="ngForm" (ngSubmit)="onEditTicket(presForm)">
+ 
+               <h4 class="list-group-item-text right">{{this.ticket.CategoryDesc}}</h4>
+               
+               <h4>Ticket Description: </h4>
+               <p> {{this.ticket.Description}}</p>
+            
+         <textarea  class="form-control"  id="comment" name="Comment" #Comment="ngModel" placeholder="Enter description"  [(ngModel)]="this.ticket.Comment"  rows="5">
+                 {{this?.ticket?.Comment}}
+         </textarea>
+        
+         <div class="form-group">
+                 <label for="status"></label>
+                 <select  name="StatusId" #StatusId="ngModel" [(ngModel)]="this.ticket.StatusId" class="form-control" id="categories">
+                     <option [value]="aStatus.StatusId" *ngFor="let aStatus of this.statusList">{{aStatus.StatusDesc}} </option>   
+                 </select>
+             </div>
+ 
+         <div>
+             <h4>Date created: {{this?.ticket?.CreatedDate | date}}</h4>
+         </div>
+         
+             <button *ngIf="this.data.type !== 'dash'" mat-raised-button type="submit" color="primary">Update Ticket</button>
+     
+     </form>
+ 
+ 
+         <div *ngIf="this.data.type === 'admin'">
+             <app-asign-user [ticket]="this.ticket"></app-asign-user>
+         </div>
+ 
+ 
+ </div>
+ </div>

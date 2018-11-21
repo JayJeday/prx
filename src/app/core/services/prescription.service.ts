@@ -18,19 +18,27 @@ export class PrescriptionService {
   constructor(private http:Http) { }
 
   getPrescriptions(){
-
+    
     /*
-   
     return Observable.fromPromise(web.lists.getByTitle("Prescription").items.get())
     .pipe(map((data:any)=>{
         return data as Prescription[];
     })); 
-
     */
 
-   return Observable.fromPromise(web.lists.getByTitle("Tickets").items
-   .select("Doctor/FirstName").expand("DoctorID").get());
+   return Observable.fromPromise(web.lists.getByTitle("Prescription").items
+   .select("ID","Description","Doctor/LastName","status/Title","Patient/FirstName","Patient/LastName")
+   .expand("Doctor","status","Patient").get());
+  }
 
-}
+  getSearchedPrescription(filterQuery:string){
 
+    return Observable.fromPromise(web.lists.getByTitle("Prescription").items.filter(filterQuery)
+    .select("ID","Description","Doctor/LastName","status/Title","Patient/FirstName","Patient/LastName")
+    .expand("Doctor","status","Patient").get());
+  
+  }
+
+
+  
 }
