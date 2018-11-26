@@ -25,7 +25,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PrescDetailComponent } from './prescriptions/presc-detail/presc-detail.component';
 import { PatientDetailComponent } from './patients/patient-detail/patient-detail.component';
 import { MedicationsDetailComponent } from './medications/medications-detail/medications-detail.component';
-import { DoctorsDetailComponent } from './medications/doctors-detail/doctors-detail.component';
+import { DoctorsDetailComponent } from './doctors/doctors/doctors-detail/doctors-detail.component';
+import { PrescInsertFormComponent } from './prescriptions/presc-insert-form/presc-insert-form.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { DoctorsDetailComponent } from './medications/doctors-detail/doctors-det
     PrescDetailComponent,
     PatientDetailComponent,
     MedicationsDetailComponent,
-    DoctorsDetailComponent
+    DoctorsDetailComponent,
+    PrescInsertFormComponent
   ],
   imports: [
     FormsModule,
@@ -61,9 +63,9 @@ import { DoctorsDetailComponent } from './medications/doctors-detail/doctors-det
     SpecializationService,
     StatusService,
     
-  //  {provide: APP_BASE_HREF, useValue : '/sites/sharestack/JC-site/Pages/default.aspx'}
+   {provide: APP_BASE_HREF, useValue : '/sites/sharestack/JC-site/Pages/default.aspx'}
   ],
-  entryComponents: [PrescDetailComponent],
+  entryComponents: [PrescDetailComponent,DoctorsDetailComponent],
   bootstrap: [AppComponent]
 })
 

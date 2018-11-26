@@ -1,5 +1,5 @@
 <!-- Table of doctors -->
-<div class="mat-elevation-z8">
+<div class="mat-elevation-z8 top">
   
     <mat-table [dataSource]="this.doctorData"  matSort>
       
@@ -26,7 +26,7 @@
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let row">
-          <button mat-icon-button  (click)="onEdit(row.ID)"><mat-icon>launch</mat-icon></button>   
+          <button mat-icon-button  (click)="onViewDoctor(row.ID)"><mat-icon>launch</mat-icon></button>   
          </mat-cell>
       </ng-container>
 

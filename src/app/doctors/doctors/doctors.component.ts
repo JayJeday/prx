@@ -3,6 +3,7 @@ import { DoctorService } from 'src/app/core/services/doctor.service';
 import { Doctor } from 'src/app/core/models/doctor.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { DoctorsDetailComponent } from './doctors-detail/doctors-detail.component';
 
 @Component({
   selector: 'app-doctors',
@@ -35,8 +36,15 @@ displayedColumns: string[] = ['ID', 'FirstName', 'LastName', 'license', 'actions
     console.log(this.doctors);  
   }
 
-onEdit(row){
 
+onViewDoctor(row){
+
+  const dialogRef = this.dialog.open(DoctorsDetailComponent, {
+    width: '60%',
+    data:{id:row}
+ });
+ 
+ return false;
 }
 
 }

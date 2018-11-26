@@ -4,8 +4,13 @@ import { DoctorsComponent } from './doctors/doctors/doctors.component';
 import { PatientsComponent } from './patients/patients.component';
 import { MedicationsComponent } from './medications/medications.component';
 import { PrescriptionsComponent } from './prescriptions/prescriptions.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
+  {
+    path:'',
+    component:HomeComponent
+  },
   {
     path:'doctors', 
     component:DoctorsComponent

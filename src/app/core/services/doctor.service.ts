@@ -5,7 +5,6 @@ import { environment } from "src/environments/environment";
 import { Web,sp, spODataEntity, Item } from '@pnp/sp';
 import { Observable } from 'rxjs/Rx';
 import { map } from 'rxjs/operators';
-import { Status } from "../models/status.model";
 import { Doctor } from "../models/doctor.model";
 
 const web = new Web(environment.web);
@@ -24,5 +23,13 @@ export class DoctorService {
         return data as Doctor[];
     }));    
 }
+
+getDoctorById(id:number){
+  return Observable.fromPromise(web.lists.getByTitle("Doctors").items.getById(id)
+  .select("ID","FirstName","LastName","license", "Specialization/Specialty").expand("Specialization")
+  .get());
+
+}
+
 
 }

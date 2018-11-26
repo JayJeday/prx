@@ -15,7 +15,7 @@ export class PatientsComponent implements OnInit {
   patientData: MatTableDataSource<any>;
 
   //columns
-  displayedColumns: string[] = ['ID', 'FirstName', 'LastName', 'Telephone', 'actions'];
+  displayedColumns: string[] = ['ID', 'FirstName', 'LastName', 'Telephone'];
 
   constructor(private patientService:PatientService) { }
 

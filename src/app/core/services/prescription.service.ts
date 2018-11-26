@@ -32,13 +32,18 @@ export class PrescriptionService {
   }
 
   getSearchedPrescription(filterQuery:string){
-
+    
     return Observable.fromPromise(web.lists.getByTitle("Prescription").items.filter(filterQuery)
     .select("ID","Description","Doctor/LastName","status/Title","Patient/FirstName","Patient/LastName")
     .expand("Doctor","status","Patient").get());
   
   }
 
-
+  getPrescriptionById(id:number){
+    return Observable.fromPromise(web.lists.getByTitle("Prescription").items.getById(id)
+    .select("ID","Description","Doctor/LastName","status/Title","Patient/FirstName","Patient/LastName")
+    .expand("Doctor","status","Patient").get());
+    
+  }
   
 }

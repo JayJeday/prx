@@ -45,6 +45,7 @@ export class PrescriptionsComponent implements OnInit {
       width: '60%',
       data:{id:row}
    });
+   return false;
   }
 
 }

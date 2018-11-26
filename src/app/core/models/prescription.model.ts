@@ -4,7 +4,7 @@ import { Doctor } from "./doctor.model";
 
 export interface Prescription{
     Description?:string;
-    Status?:Status;
+    status?:Status;
     Patient?:Patient;
     Doctor?:Doctor;
 }

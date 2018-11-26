@@ -1,4 +1,51 @@
 <app-header></app-header>
-<app-home></app-home>
+<div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+              <ul class="top tiless">
+      
+                <li class="tile">
+                  <a class="tileLink" style="cursor: pointer;"
+                  [routerLink]="['/doctors']">
+                  View Doctors
+                </a>
+              </li>
+              
+                <li class="tile">
+                    <a class="tileLink" style="cursor: pointer;"
+                  [routerLink]="['/medications']">
+                  View Medications
+                  </a>  
+                </li>
 
-<router-outlet></router-outlet>
+                <li class="tile">
+                    <a class="tileLink" style="cursor: pointer;"
+                  [routerLink]="['/patients']">
+                  View Patients
+                  </a>
+                </li>
+      
+                <li class="tile"> 
+                   <a class="tileLink" style="cursor: pointer;"
+                  [routerLink]="['/prescriptions']">
+                  View Prescriptions
+                </a>
+              </li>
+      
+            </ul>
+            </div>
+      
+            <div class="col-md-8">
+               <router-outlet></router-outlet> 
+           </div>
+        </div>
+
+        <!--
+        <div class="header" style="text-align:center" >
+                  <h4>Search Prescriptions</h4>
+                  <app-presc-search-form></app-presc-search-form>
+         </div>
+        -->
+        
+
+      </div>

@@ -1,0 +1,15 @@
+<form [formGroup]="formGroup" novalidate (ngSubmit)="onSubmit()">
+    <input type="file" (change)="onFileChange($event)" />
+    <button type="submit" [disabled]="formGroup.invalid || formGroup.prestine">Submit</button>
+  </form>
+<!--When prescription is loaded show information-->
+
+<div class="row">
+  <div class="presc-info-block">
+    <h4>Patient:</h4>
+    <h4>Date:</h4>
+    <h4>Description:</h4>
+  </div>
+
+
+</div>
