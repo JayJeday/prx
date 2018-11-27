@@ -24,7 +24,15 @@ export class PatientService {
         return data as Patient[];
    
       }));    
-
 }
+
+//verify if patient exist
+  verifyPatient(filterQuery:string){
+    return Observable.fromPromise(web.lists.getByTitle("Patients").items.filter(filterQuery).get())
+    .pipe(map((data:any)=>{
+       return data as Patient;
+    }));
+}
+
 
 }

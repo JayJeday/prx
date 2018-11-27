@@ -5,8 +5,8 @@
 <!--When prescription is loaded show information-->
 
 <div class="row">
-  <div class="presc-info-block">
-    <h4>Patient:</h4>
+  <div class="presc-info-block" *ngIf="dataLoaded">
+    <h4>Patient: {{patient.FirstName}} {{patient.LastName}} </h4>
     <h4>Date:</h4>
     <h4>Description:</h4>
   </div>

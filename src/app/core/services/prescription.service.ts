@@ -40,10 +40,52 @@ export class PrescriptionService {
   }
 
   getPrescriptionById(id:number){
+
     return Observable.fromPromise(web.lists.getByTitle("Prescription").items.getById(id)
     .select("ID","Description","Doctor/LastName","status/Title","Patient/FirstName","Patient/LastName")
     .expand("Doctor","status","Patient").get());
     
   }
+
+  //attach prescription
+  setPrescFile(id:number,filename:string,content:string | Blob | ArrayBuffer){
+
+    let item = web.lists.getByTitle("Prescription").items.getById(id);
+
+    return Observable.fromPromise(item.attachmentFiles.add(filename, content));
+
+  }
+  
+  getPrescFile(id:number){
+
+    let item = web.lists.getByTitle("Prescription").items.getById(id);
+
+    return Observable.fromPromise(item.attachmentFiles.get());
+
+  }
+
+
+  getFileToSharepoint(path:string){
+
+    //input temporary memory
+    let input = <HTMLInputElement>document.getElementById("thefileinput");
+    let file = input.files[0];
+
+    //verify if file is < 10mb
+    if(file.size > 10485760){
+
+    return Observable.fromPromise(web.getFolderByServerRelativeUrl(path).files.add(file.name,file,true));
+
+    }else{
+
+        //file is over 10mb
+        return Observable.fromPromise(web.getFolderByServerRelativeUrl(path).files.addChunked(file.name,file,data =>{
+        
+       
+    },true));
+
+    }
+
+}
   
 }

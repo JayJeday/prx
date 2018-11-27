@@ -31,5 +31,10 @@ getDoctorById(id:number){
 
 }
 
+//verify if patient exist
+verifyDoctor(filterQuery:string){
+  return Observable.fromPromise(web.lists.getByTitle("Doctors").items.filter(filterQuery).get());
+}
+
 
 }
