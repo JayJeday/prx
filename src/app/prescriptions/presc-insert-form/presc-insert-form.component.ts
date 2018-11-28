@@ -6,6 +6,9 @@ import { DoctorService } from 'src/app/core/services/doctor.service';
 import { StatusService } from 'src/app/core/services/status.service';
 import { Prescription } from 'src/app/core/models/prescription.model';
 import { Patient } from 'src/app/core/models/patient.model';
+import { Doctor } from 'src/app/core/models/doctor.model';
+import { MedicationsService } from 'src/app/core/services/medications.service';
+import { Medicaments } from 'src/app/core/models/medicaments.model';
 
 @Component({
   selector: 'app-presc-insert-form',
@@ -14,10 +17,13 @@ import { Patient } from 'src/app/core/models/patient.model';
 })
 export class PrescInsertFormComponent implements OnInit {
 
+  medicament:Medicaments;
   key:string;
   patient:Patient;
+  doctor:Doctor;
   prescription:Prescription = {} as Prescription;
   filename:string;
+
   dataLoaded:boolean;
 
   formGroup = this.fb.group({
@@ -27,7 +33,8 @@ export class PrescInsertFormComponent implements OnInit {
   constructor(private fb: FormBuilder,private cd: ChangeDetectorRef,
      private prescService:PrescriptionService,
      public patientService:PatientService,
-     private doctorService:DoctorService
+     private doctorService:DoctorService,
+     private medicationService:MedicationsService
      ) {}
 
   ngOnInit() {
@@ -69,13 +76,15 @@ export class PrescInsertFormComponent implements OnInit {
   readPrescFileToLoad(reader){
     //split the string 
     let prescriptionFields = reader.split(',');
+    this.manageMeds(prescriptionFields[3]);
+
+    console.log(prescriptionFields);
     
     prescriptionFields.forEach(element => {
       
      this.key =  element.substr(0,element.indexOf(' ')); 
      let value = element.substr(element.indexOf(' ')+1);
 
-      console.log(this.key);
 
      switch (this.key.trim()) {
       // validate the patient by his phone number
@@ -89,8 +98,9 @@ export class PrescInsertFormComponent implements OnInit {
       
          //  validate doctor by his license
         case 'license':   
-        this.doctorService.verifyDoctor(filter).subscribe((data)=>{
-          console.log(data);
+       
+        this.doctorService.verifyDoctor(`license eq '${value}'`).subscribe((data)=>{
+          this.doctor = data[0];
         });
         
        default:
@@ -98,20 +108,47 @@ export class PrescInsertFormComponent implements OnInit {
      }
 
     });
-
   }
 
-  onSubmit(){
-    console.log(this.formGroup.value.file);
-    console.log(this.filename);
+manageMeds(medsPart:string){
 
-    this.prescService.setPrescFile(1,this.filename,this.formGroup.value.file)
-    .subscribe((data)=>{
-      console.log(data);
+  let meds = medsPart.split('--');
+
+  meds.forEach(async (med)=>{
+
+    let value = med.substr(med.indexOf(':')+1);
+
+    let brandValue = value.substr(0,value.indexOf(' '));
+    let orientationTypeValue = value.substr(value.indexOf(':')+1);
+
+    //validate if med is in base
+   this.isMedInBase(brandValue,orientationTypeValue);
+
+  });
+}
+
+ async isMedInBase(brand, orientation){
+  let filter = `Brand eq '${brand}' and  OrientationType eq '${orientation}'`;
+  
+  this.medicationService.validateMed(filter);
+
+  this.medicationService.medSubject.subscribe((data)=>{
+
+    console.log(data);
+
+  });
+}
+
+/*
+submit insert prescription along with patient med
+*/
+  onSubmit(){
+
+    this.prescService.addPrescription({PatientId:this.patient.ID,DoctorId:this.doctor.ID,statusId:1},this.filename,this.formGroup.value.file,).subscribe((data)=>{
+        console.log("successfull entry");
     },(err)=>{
       console.log(err);
     });
-  
   }
 
 

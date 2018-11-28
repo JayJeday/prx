@@ -31,6 +31,16 @@ export class PrescriptionService {
    .expand("Doctor","status","Patient").get());
   }
 
+  addPrescription(presc,filename:string,content:string | Blob | ArrayBuffer){
+    return Observable.fromPromise(web.lists.getByTitle("Prescription").items.add(presc).then((itemCreated)=>{
+
+      let item = web.lists.getByTitle("Prescription").items.getById(itemCreated.data.ID);
+
+      return Observable.fromPromise(item.attachmentFiles.add(filename, content));
+
+    }));
+  }
+
   getSearchedPrescription(filterQuery:string){
     
     return Observable.fromPromise(web.lists.getByTitle("Prescription").items.filter(filterQuery)

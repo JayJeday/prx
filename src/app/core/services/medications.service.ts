@@ -4,7 +4,7 @@ import { Http } from "@angular/http";
 import { environment } from "src/environments/environment";
 
 import { Web} from '@pnp/sp';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { map } from 'rxjs/operators';
 import { Medicaments } from '../models/medicaments.model';
 
@@ -15,6 +15,8 @@ const web = new Web(environment.web);
 })
 export class MedicationsService {
 
+  medSubject = new Subject<Medicaments>();
+
   constructor(private http: Http) { }
 
   getMedications(){
@@ -23,4 +25,16 @@ export class MedicationsService {
         return data as Medicaments[];
     }));    
 }
+
+  async validateMed(filterQuery){
+    
+    return Observable.fromPromise(web.lists.getByTitle("Medicaments").items.filter(filterQuery).get())
+    .pipe(map((data:any)=>{
+
+      this.medSubject.next(data);
+      
+    }));
+    
+  }
+
 }

@@ -29,7 +29,7 @@ displayedColumns: string[] = ['ID', 'Description', 'PatientName', 'PatientLastNa
   constructor(private prescService:PrescriptionService,
           private statusService: StatusService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
 
     this.statusService.getStatus().subscribe((data:any)=>{
       this.statusList = data;
