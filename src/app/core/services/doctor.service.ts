@@ -3,7 +3,7 @@ import { Http } from "@angular/http";
 import { environment } from "src/environments/environment";
 
 import { Web,sp, spODataEntity, Item } from '@pnp/sp';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { map } from 'rxjs/operators';
 import { Doctor } from "../models/doctor.model";
 
@@ -14,6 +14,8 @@ const web = new Web(environment.web);
   providedIn: 'root'
 })
 export class DoctorService {
+
+  doctSubject = new Subject<Doctor>();
 
   constructor(private http: Http) { }
 
@@ -33,7 +35,11 @@ getDoctorById(id:number){
 
 //verify if patient exist
 verifyDoctor(filterQuery:string){
-  return Observable.fromPromise(web.lists.getByTitle("Doctors").items.filter(filterQuery).get());
+  return Observable.fromPromise(web.lists.getByTitle("Doctors").items.filter(filterQuery).get()).subscribe((data:any)=>{
+  
+    this.doctSubject.next(data);
+
+  });
 }
 
 

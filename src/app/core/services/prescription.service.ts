@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Rx';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Prescription } from '../models/prescription.model';
+import { PatientMedService } from './patientmed.service';
 
 const web = new Web(environment.web);
 
@@ -32,12 +33,14 @@ export class PrescriptionService {
   }
 
   addPrescription(presc,filename:string,content:string | Blob | ArrayBuffer){
+
     return Observable.fromPromise(web.lists.getByTitle("Prescription").items.add(presc).then((itemCreated)=>{
 
       let item = web.lists.getByTitle("Prescription").items.getById(itemCreated.data.ID);
 
-      return Observable.fromPromise(item.attachmentFiles.add(filename, content));
+       Observable.fromPromise(item.attachmentFiles.add(filename, content));
 
+       return itemCreated.data.ID;
     }));
   }
 

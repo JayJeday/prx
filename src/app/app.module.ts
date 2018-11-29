@@ -27,6 +27,8 @@ import { PatientDetailComponent } from './patients/patient-detail/patient-detail
 import { MedicationsDetailComponent } from './medications/medications-detail/medications-detail.component';
 import { DoctorsDetailComponent } from './doctors/doctors/doctors-detail/doctors-detail.component';
 import { PrescInsertFormComponent } from './prescriptions/presc-insert-form/presc-insert-form.component';
+import { PatientMedService } from './core/services/patientmed.service';
+import { PrescGenerateFormComponent } from './prescriptions/presc-generate-form/presc-generate-form.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { PrescInsertFormComponent } from './prescriptions/presc-insert-form/pres
     PatientDetailComponent,
     MedicationsDetailComponent,
     DoctorsDetailComponent,
-    PrescInsertFormComponent
+    PrescInsertFormComponent,
+    PrescGenerateFormComponent
   ],
   imports: [
     FormsModule,
@@ -62,6 +65,7 @@ import { PrescInsertFormComponent } from './prescriptions/presc-insert-form/pres
     PrescriptionService,
     SpecializationService,
     StatusService,
+    PatientMedService,
     
    {provide: APP_BASE_HREF, useValue : '/sites/sharestack/JC-site/Pages/default.aspx'}
   ],

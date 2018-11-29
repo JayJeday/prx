@@ -29,12 +29,13 @@ export class MedicationsService {
   async validateMed(filterQuery){
     
     return Observable.fromPromise(web.lists.getByTitle("Medicaments").items.filter(filterQuery).get())
-    .pipe(map((data:any)=>{
-
-      this.medSubject.next(data);
+    .subscribe((data:any)=>{
       
-    }));
-    
+      this.medSubject.next(data);
+
+    });
   }
 
+
+  
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { PrescriptionService } from 'src/app/core/services/prescription.service';
 import { PatientService } from 'src/app/core/services/patient.service';
 import { DoctorService } from 'src/app/core/services/doctor.service';
@@ -9,6 +9,8 @@ import { Patient } from 'src/app/core/models/patient.model';
 import { Doctor } from 'src/app/core/models/doctor.model';
 import { MedicationsService } from 'src/app/core/services/medications.service';
 import { Medicaments } from 'src/app/core/models/medicaments.model';
+import { PatientMedService } from 'src/app/core/services/patientmed.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-presc-insert-form',
@@ -18,28 +20,92 @@ import { Medicaments } from 'src/app/core/models/medicaments.model';
 export class PrescInsertFormComponent implements OnInit {
 
   medicament:Medicaments;
+  medicamentList:Medicaments[] = [];
+
   key:string;
-  patient:Patient;
+  patient:Patient = {} as Patient;
   doctor:Doctor;
   prescription:Prescription = {} as Prescription;
   filename:string;
 
-  dataLoaded:boolean;
+  submitLoading:boolean;
 
-  formGroup = this.fb.group({
-    file: [null, Validators.required]
+  medNotExist:boolean;
+  patNotExist:boolean;
+  docNotExist:boolean;
+
+  dataLoaded:boolean;
+  loading:boolean;
+
+  @ViewChild('fileName')
+  fileInputVariable: ElementRef;
+
+  formGroup = new FormGroup({
+    'file': new FormControl(null, Validators.required)
   });
 
-  constructor(private fb: FormBuilder,private cd: ChangeDetectorRef,
+  constructor(
+    private cd: ChangeDetectorRef,
      private prescService:PrescriptionService,
      public patientService:PatientService,
      private doctorService:DoctorService,
-     private medicationService:MedicationsService
+     public snackBar: MatSnackBar,
+     private medicationService:MedicationsService,
+     private patientmedService:PatientMedService
      ) {}
 
   ngOnInit() {
 
+    //validation here
+    this.medicationService.medSubject.subscribe((data:any)=>{
+      console.log(data);
+
+      this.medicament = data[0];
+      this.medicamentList.push(this.medicament);
+      console.log(this.medicamentList);
+
+      if(data.length !== 0){
+        console.log('medicament exist');
+        this.medNotExist = false;  
+      }else{
+        console.log('medicament does not exist');
+        this.medNotExist = true;
+      }
+
+    });
+
+    this.patientService.patSubject.subscribe((data:any)=>{
+
+      this.patient = data[0];
+      
+      if(data.length !== 0){
+        console.log('patient exist');
+        this.patNotExist = false;  
+      }else{
+        console.log('patient does not exist');
+        this.patNotExist = true;
+      }
+    });
+
+    this.doctorService.doctSubject.subscribe((data:any)=>{
+
+      this.doctor = data[0];
+      console.log(this.doctor);
+
+      if(data.length !== 0){
+        console.log('doctor exist');
+        this.docNotExist = false;  
+      }else{
+        console.log('doctor does not exist');
+        this.docNotExist = true;
+      }
+
+      this.loading = false;
+    });
   }
+
+  get f() { return this.formGroup.controls; }
+
 
 
   onFileChange(event) {
@@ -57,6 +123,8 @@ export class PrescInsertFormComponent implements OnInit {
       //when file is loaded this observer will execute
       reader.onload = (e) => {
         
+        this.loading = true;
+
         this.formGroup.patchValue({
           file: reader.result
         });
@@ -72,10 +140,13 @@ export class PrescInsertFormComponent implements OnInit {
     }
   }
 
-
+/*
+  Reading prescription file 
+*/
   readPrescFileToLoad(reader){
     //split the string 
     let prescriptionFields = reader.split(',');
+
     this.manageMeds(prescriptionFields[3]);
 
     console.log(prescriptionFields);
@@ -90,18 +161,17 @@ export class PrescInsertFormComponent implements OnInit {
       // validate the patient by his phone number
        case 'Telephone':
       let filter = `Telephone eq '${value}'`;
-   
-         this.patientService.verifyPatient(filter).subscribe((data)=>{
-          this.patient = data[0];   
-        });
+
+        //validate if patient exist
+         this.patientService.verifyPatient(filter);
+
          break;
       
-         //  validate doctor by his license
+        
         case 'license':   
-       
-        this.doctorService.verifyDoctor(`license eq '${value}'`).subscribe((data)=>{
-          this.doctor = data[0];
-        });
+
+        //  validate doctor by his license
+        this.doctorService.verifyDoctor(`license eq '${value}'`);
         
        default:
          break;
@@ -109,12 +179,20 @@ export class PrescInsertFormComponent implements OnInit {
 
     });
   }
-
+/*
+  manage med part of the file
+*/
 manageMeds(medsPart:string){
 
-  let meds = medsPart.split('--');
+  //need to substring the medication header part
+  let stri = medsPart.substr(medsPart.indexOf('--')+2);
 
-  meds.forEach(async (med)=>{
+  // split string by --
+  let meds = stri.split('--');
+
+  console.log(meds);
+
+  meds.forEach( (med)=>{
 
     let value = med.substr(med.indexOf(':')+1);
 
@@ -122,7 +200,7 @@ manageMeds(medsPart:string){
     let orientationTypeValue = value.substr(value.indexOf(':')+1);
 
     //validate if med is in base
-   this.isMedInBase(brandValue,orientationTypeValue);
+    this.isMedInBase(brandValue,orientationTypeValue);
 
   });
 }
@@ -130,26 +208,54 @@ manageMeds(medsPart:string){
  async isMedInBase(brand, orientation){
   let filter = `Brand eq '${brand}' and  OrientationType eq '${orientation}'`;
   
+  //validate med
   this.medicationService.validateMed(filter);
 
-  this.medicationService.medSubject.subscribe((data)=>{
-
-    console.log(data);
-
-  });
 }
 
 /*
-submit insert prescription along with patient med
+
+submit insert prescription along with patient med and file
+
 */
   onSubmit(){
-
+    this.submitLoading = true;
     this.prescService.addPrescription({PatientId:this.patient.ID,DoctorId:this.doctor.ID,statusId:1},this.filename,this.formGroup.value.file,).subscribe((data)=>{
-        console.log("successfull entry");
+        console.log(data);
+        this.medicamentList.forEach(element => {
+          this.patientmedService.addPatientMed({MedicamentId:element.ID,PatientsId:this.patient.ID,PrescriptionId:data})
+          .subscribe((data:any)=>{
+
+            this.submitLoading = false;
+            this.formGroup.reset();
+            this.fileInputVariable.nativeElement.value = "";
+            this.dataLoaded = false;
+            this.resetData();
+
+            //display validation message
+            this.snackBar.open("Inserted successfully",'', {
+              duration: 1000
+            });
+          },(error)=>{
+            console.log(error);
+            this.submitLoading = false;
+          });
+        });
+
     },(err)=>{
       console.log(err);
+      this.submitLoading = false;
     });
+
   }
 
 
+  resetData(){
+    this.patient = null;
+    this.doctor = null;
+    this.medicament = null;
+    this.medicamentList = null;
+  }
+
 }
+{}

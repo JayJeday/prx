@@ -1,17 +1,36 @@
 <form [formGroup]="formGroup" novalidate (ngSubmit)="onSubmit()">
-    <input type="file" (change)="onFileChange($event)" />
+    <input type="file" #fileName  (change)="onFileChange($event)" />
     <button type="submit" [disabled]="formGroup.invalid || formGroup.prestine">Submit</button>
   </form>
 <!--When prescription is loaded show information-->
 
 <div class="row">
-  <div class="presc-info-block" *ngIf="dataLoaded">
-    <h4>Patient:  {{patient?.FirstName}} {{patient?.LastName}} </h4>
-    <h4>Doctor: {{doctor?.FirstName}} {{doctor?.LastName}}</h4>
+  <div class="presc-info-block" *ngIf="dataLoaded && !loading">
+    
+    <h4 *ngIf="!patNotExist">Patient: {{patient?.FirstName}} {{patient?.LastName}} </h4>
+    <h4 *ngIf="patNotExist" style="color: red">Error: patient not exist</h4>
+
+    <h4 *ngIf="!docNotExist">Doctor: {{doctor?.FirstName}} {{doctor?.LastName}}</h4>
+    <h4 *ngIf="docNotExist" style="color: red">Error: doctor not found</h4>
+    
+    <h4>Medication:</h4>
+    <hr>
+    <div *ngIf="medNotExist">
+      <h3 style="color: red">Med does not exist in database</h3>
+    </div>
+    <div class="medList">
+      <ul *ngFor="let med of medicamentList">
+        <li>Brand: {{med.Brand}} type:{{med.OrientationType}} </li>
+      </ul>
+    </div>
 </div>
 
-<div>
-  
+<div class="col-md-8" *ngIf="loading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
 
+</div>
+
+<div class="row" *ngIf="submitLoading">
+    <mat-spinner></mat-spinner>
 </div>

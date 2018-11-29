@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
 import { Web,sp, spODataEntity, Item } from '@pnp/sp';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Patient } from '../models/patient.model';
@@ -14,6 +14,8 @@ const web = new Web(environment.web);
   providedIn: 'root'
 })
 export class PatientService {
+
+  patSubject = new Subject<Patient>();
 
   constructor(private http: Http) { }
 
@@ -28,10 +30,13 @@ export class PatientService {
 
 //verify if patient exist
   verifyPatient(filterQuery:string){
+
     return Observable.fromPromise(web.lists.getByTitle("Patients").items.filter(filterQuery).get())
-    .pipe(map((data:any)=>{
-       return data as Patient;
-    }));
+    .subscribe((data:any)=>{
+
+      this.patSubject.next(data);
+
+    });
 }
 
 
