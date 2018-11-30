@@ -1,4 +1,8 @@
- <div class="row">
+ <!-- Add tabs -->
+ <mat-tab-group [dynamicHeight]="true">
+    <mat-tab label="Search Prescription">
+
+       <div class="row">
     <div class="col-md-12 top">
         <div class="header" style="text-align:center" >
             <h4>Search Prescriptions</h4>
@@ -6,22 +10,43 @@
         </div>
   </div>
 
- </div>
-
- <div class="row">
-        <div class="col-md-12 top">
+ </div> 
+    </mat-tab>
+   
+    <mat-tab label="Insert Prescription">
+   
+        <div class="row">
+             <div class="col-md-12 top">
                 <div class="header" style="text-align:center" >
                     <h4>Enter Prescriptions</h4>
                     <app-presc-insert-form></app-presc-insert-form>
                 </div>
- </div>
+            </div>
+        </div>
 
- <div class="row">
+    </mat-tab>
+
+    <mat-tab label="Generate Prescription">
+
+      <div class="row">
         <div class="col-md-12 top">
                 <div class="header" style="text-align:center" >
                     <h4>Generate Prescription:</h4>
                     <app-presc-generate-form></app-presc-generate-form>
                 </div>
- </div>
+        </div>
  
+        </div>
+  
+    </mat-tab>
+    
+  </mat-tab-group>
+
+ <div class="row">
+    
+ </div>
+
+ 
+
+
  

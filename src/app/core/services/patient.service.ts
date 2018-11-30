@@ -28,6 +28,10 @@ export class PatientService {
       }));    
 }
 
+  getPatientByTelephone(filterQuery:string){
+    return Observable.fromPromise(web.lists.getByTitle("Patients").items.filter(filterQuery).get());
+  }
+
 //verify if patient exist
   verifyPatient(filterQuery:string){
 

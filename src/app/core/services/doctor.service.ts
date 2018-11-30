@@ -33,6 +33,13 @@ getDoctorById(id:number){
 
 }
 
+
+getDoctorByLicense(filterQuery:string){
+  
+ return Observable.fromPromise(web.lists.getByTitle("Doctors").items.filter(filterQuery).get());
+
+}
+
 //verify if patient exist
 verifyDoctor(filterQuery:string){
   return Observable.fromPromise(web.lists.getByTitle("Doctors").items.filter(filterQuery).get()).subscribe((data:any)=>{

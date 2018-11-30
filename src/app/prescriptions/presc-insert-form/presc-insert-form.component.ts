@@ -106,8 +106,6 @@ export class PrescInsertFormComponent implements OnInit {
 
   get f() { return this.formGroup.controls; }
 
-
-
   onFileChange(event) {
     let reader = new FileReader();
    

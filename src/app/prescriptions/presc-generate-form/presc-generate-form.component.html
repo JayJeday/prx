@@ -8,24 +8,26 @@
 
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="First Name" formControlName="FirstName">
-              </mat-form-field>
-            </div>
-
-            <div class="col-md-4">
-               <mat-form-field>
-                 <input matInput placeholder="Last Name" formControlName="LastName">
-              </mat-form-field>
-            </div>
-           
-            <div class="col-md-4">
-              <mat-form-field>
-                  <input matInput placeholder="Telephone" formControlName="Telephone">
+                  <input matInput placeholder="Patient Telephone" formControlName="Telephone">
               </mat-form-field>
             </div>
               
+            <div class="col-md-4">
+             <mat-form-field>
+                 <input matInput placeholder="Doctor License" formControlName="DoctorLicense">
+            </mat-form-field>
+          </div>
+
         </div>
-                
+          
+        <div class="row">
+         
+          <mat-form-field class="col-md-12" >
+            <textarea matInput placeholder="Enter description" formControlName="description" rows="5"></textarea>
+          </mat-form-field>
+
+        </div>
+
         <div>
           <button mat-button matStepperNext>Next</button>
         </div>
@@ -34,7 +36,80 @@
     <mat-step [stepControl]="medicamentFormGroup">
          <ng-template matStepLabel>Select Medications</ng-template>
         <div>
-          <app-medications></app-medications>
+          
+          <!-- medication table -->
+          <div class="row filterCard">
+            <mat-card class="col-md-12 filterSeach">
+               <mat-form-field class="col-md-12"  >
+                   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                 </mat-form-field>                
+             </mat-card> 
+            </div>
+          
+          <div class="mat-elevation-z8 top">
+            
+              <mat-table [dataSource]="this.medData"  matSort>
+                
+                  <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <!-- top checkbox that control all -->
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                      [checked]="selection.hasValue() && isAllSelected()"
+                                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>
+                      </th>
+          
+                      <td mat-cell *matCellDef="let row">
+                        <!-- selection checkbox -->
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                                      (change)="$event ? selection.toggle(row) : null"
+                                      [checked]="selection.isSelected(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+          
+          
+                <ng-container matColumnDef="ID">
+                  <mat-header-cell *matHeaderCellDef  mat-sort-header>ID</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{element.ID}}</mat-cell>
+                </ng-container>
+              
+                <ng-container matColumnDef="Brand">
+                  <mat-header-cell *matHeaderCellDef  mat-sort-header>Brand</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{element.Brand}}</mat-cell>
+                </ng-container>
+               
+                <ng-container matColumnDef="Description">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{element.Description}}</mat-cell>
+                </ng-container>
+               
+                <ng-container matColumnDef="OrientationType">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Orientation Type</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{element.OrientationType}}</mat-cell>
+                </ng-container>
+          
+                <ng-container matColumnDef="loading">
+                      <mat-footer-cell *matFooterCellDef colspan="6">
+                        Loading data...
+                      </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="noData">
+                      <mat-footer-cell *matFooterCellDef colspan="6">
+                        No data.
+                      </mat-footer-cell>
+                    </ng-container>
+          
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"  (click)="selection.toggle(row)"></mat-row>
+          
+                    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': this.doctorData != null}"></mat-footer-row>
+                    <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!( this.doctorData != null && this.doctorData.length == 0 )}"></mat-footer-row>
+                 
+              </mat-table>
+          
+            </div>
+
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
         </div>
@@ -42,9 +117,10 @@
     <mat-step>
       <ng-template matStepLabel>Generate File</ng-template>
 
+      <button mat-raised-button color="primary" (click)="generateFile()">Generate File</button>
       <div>
         <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
+        <button mat-button (click)="stepper.reset()" (click)="resetData()">Reset</button>
       </div>
     </mat-step>
   </mat-horizontal-stepper>
