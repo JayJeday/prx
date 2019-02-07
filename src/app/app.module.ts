@@ -29,10 +29,15 @@ import { DoctorsDetailComponent } from './doctors/doctors/doctors-detail/doctors
 import { PrescInsertFormComponent } from './prescriptions/presc-insert-form/presc-insert-form.component';
 import { PatientMedService } from './core/services/patientmed.service';
 import { PrescGenerateFormComponent } from './prescriptions/presc-generate-form/presc-generate-form.component';
+import { DialogResultComponent } from './shared/dialogresult.component';
+import {NgxMaskModule} from 'ngx-mask';
+import { SearchComponentComponent } from './search-component/search-component.component'
+import { Docset } from './core/services/docset';
 
 @NgModule({
   declarations: [
     AppComponent,
+    DialogResultComponent,
     DoctorsComponent,
     HomeComponent,
     MedicationsComponent,
@@ -45,7 +50,8 @@ import { PrescGenerateFormComponent } from './prescriptions/presc-generate-form/
     MedicationsDetailComponent,
     DoctorsDetailComponent,
     PrescInsertFormComponent,
-    PrescGenerateFormComponent
+    PrescGenerateFormComponent,
+    SearchComponentComponent
   ],
   imports: [
     FormsModule,
@@ -57,6 +63,7 @@ import { PrescGenerateFormComponent } from './prescriptions/presc-generate-form/
     AppRoutingModule,
     BrowserAnimationsModule,
     CommonModule,
+    NgxMaskModule.forRoot()
   ],
   providers: [
     DoctorService,
@@ -66,10 +73,11 @@ import { PrescGenerateFormComponent } from './prescriptions/presc-generate-form/
     SpecializationService,
     StatusService,
     PatientMedService,
+    Docset,
     
    {provide: APP_BASE_HREF, useValue : '/sites/sharestack/JC-site/Pages/default.aspx'}
   ],
-  entryComponents: [PrescDetailComponent,DoctorsDetailComponent],
+  entryComponents: [PrescDetailComponent,DoctorsDetailComponent,DialogResultComponent],
   bootstrap: [AppComponent]
 })
 

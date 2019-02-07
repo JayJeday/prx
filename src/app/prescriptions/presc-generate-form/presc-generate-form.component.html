@@ -1,41 +1,50 @@
 <div class="row">
-<mat-horizontal-stepper [linear]="isLinear" #stepper>
-    <mat-step [stepControl]="patientFormGroup">
+<mat-horizontal-stepper linear #stepper>
+    
+  <mat-step [stepControl]="patientFormGroup">
+    
       <form [formGroup]="patientFormGroup">
+       
         <ng-template matStepLabel>Enter patient information</ng-template>
 
         <div class="row">
 
             <div class="col-md-4">
+
               <mat-form-field>
-                  <input matInput placeholder="Patient Telephone" formControlName="Telephone">
+                  <input matInput placeholder="Patient Telephone" formControlName="Telephone" mask="000-000-0000" required>
               </mat-form-field>
             </div>
               
             <div class="col-md-4">
+
              <mat-form-field>
-                 <input matInput placeholder="Doctor License" formControlName="DoctorLicense">
+                 <input matInput placeholder="Doctor License" formControlName="DoctorLicense" mask="0000000" required>
             </mat-form-field>
+
           </div>
 
         </div>
-          
+
         <div class="row">
          
           <mat-form-field class="col-md-12" >
-            <textarea matInput placeholder="Enter description" formControlName="description" rows="5"></textarea>
+            <textarea matInput placeholder="Enter description" formControlName="Description" rows="5"></textarea>
           </mat-form-field>
-
         </div>
 
         <div>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button matStepperNext (click)="patientEv()">Next</button>
         </div>
+
       </form>
+
     </mat-step>
     <mat-step [stepControl]="medicamentFormGroup">
+
          <ng-template matStepLabel>Select Medications</ng-template>
-        <div>
+      
+         <div>
           
           <!-- medication table -->
           <div class="row filterCard">
@@ -111,7 +120,7 @@
             </div>
 
           <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button matStepperNext (click)='showData()'>Next</button>
         </div>
     </mat-step>
     <mat-step>

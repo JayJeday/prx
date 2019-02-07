@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Inject } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { PrescriptionService } from 'src/app/core/services/prescription.service';
 import { PatientService } from 'src/app/core/services/patient.service';
@@ -11,6 +11,8 @@ import { MedicationsService } from 'src/app/core/services/medications.service';
 import { Medicaments } from 'src/app/core/models/medicaments.model';
 import { PatientMedService } from 'src/app/core/services/patientmed.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { DialogResultComponent } from 'src/app/shared/dialogresult.component';
 
 @Component({
   selector: 'app-presc-insert-form',
@@ -51,8 +53,8 @@ export class PrescInsertFormComponent implements OnInit {
      private doctorService:DoctorService,
      public snackBar: MatSnackBar,
      private medicationService:MedicationsService,
-     private patientmedService:PatientMedService
-     ) {}
+     private dialog: MatDialog,
+     private patientmedService:PatientMedService) {}
 
   ngOnInit() {
 
@@ -138,6 +140,12 @@ export class PrescInsertFormComponent implements OnInit {
     }
   }
 
+  onSuccessful(){
+    const dialogRef = this.dialog.open(DialogResultComponent, {
+       width: '60%'
+    });
+  }
+
 /*
   Reading prescription file 
 */
@@ -218,32 +226,37 @@ submit insert prescription along with patient med and file
 */
   onSubmit(){
     this.submitLoading = true;
-    this.prescService.addPrescription({PatientId:this.patient.ID,DoctorId:this.doctor.ID,statusId:1},this.filename,this.formGroup.value.file,).subscribe((data)=>{
+    this.prescService.addPrescription({PatientId:this.patient.ID,DoctorId:this.doctor.ID,statusId:1},this.filename,this.formGroup.value.file,)
+    .subscribe((data)=>{
         console.log(data);
+        
         this.medicamentList.forEach(element => {
           this.patientmedService.addPatientMed({MedicamentId:element.ID,PatientsId:this.patient.ID,PrescriptionId:data})
-          .subscribe((data:any)=>{
-
-            this.submitLoading = false;
-            this.formGroup.reset();
-            this.fileInputVariable.nativeElement.value = "";
-            this.dataLoaded = false;
-            this.resetData();
-
-            //display validation message
-            this.snackBar.open("Inserted successfully",'', {
-              duration: 1000
-            });
+          .subscribe((data:any)=>{          
+            //display validation message in dialog
+           
           },(error)=>{
             console.log(error);
             this.submitLoading = false;
           });
         });
 
+     
+
     },(err)=>{
       console.log(err);
       this.submitLoading = false;
-    });
+    },()=>{
+        //on complete
+          this.dataLoaded = false;
+          this.resetData();
+          this.submitLoading = false;
+          this.formGroup.reset();
+          this.fileInputVariable.nativeElement.value = "";
+           //display validation message in dialog
+          this.onSuccessful();
+
+      });
 
   }
 

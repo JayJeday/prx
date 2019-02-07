@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Docset } from './core/services/docset';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
   title = 'PharmacyRx';
 
-  constructor(private router: Router){}
+  constructor(private router: Router
+    ){}
 
 }

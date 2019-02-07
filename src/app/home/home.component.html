@@ -44,6 +44,9 @@
 
  <div class="row">
     
+    <div [@openClose]="activate ? 'open' : 'closed'" class="test">
+        <p>The box is now {{ activate ? 'Open' : 'Closed' }}!</p>
+    </div>
  </div>
 
  

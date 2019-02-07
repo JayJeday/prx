@@ -8,6 +8,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import { Medicaments } from 'src/app/core/models/medicaments.model';
 import * as FileSaver from 'file-saver';
 import { DoctorService } from 'src/app/core/services/doctor.service';
+import { Doctor } from 'src/app/core/models/doctor.model';
 
 @Component({
   selector: 'app-presc-generate-form',
@@ -20,6 +21,7 @@ export class PrescGenerateFormComponent implements OnInit {
   loading:boolean;
   success:boolean;
   
+  
   //for med table
   medications:Medicaments[];
 
@@ -31,8 +33,9 @@ export class PrescGenerateFormComponent implements OnInit {
   //columns
   displayedColumns: string[] = ['select','ID', 'Brand', 'Description', 'OrientationType'];
 
+  doctor:Doctor = {} as Doctor;
   //data to validate
-  patient:Patient;
+  patient:Patient = {} as Patient;
   medicaments:Medicaments[];
 
   constructor(private _formBuilder: FormBuilder,
@@ -46,7 +49,7 @@ export class PrescGenerateFormComponent implements OnInit {
     this.patientFormGroup = this._formBuilder.group({
        Telephone: ['', Validators.required],
        DoctorLicense: ['',Validators.required],
-       Description: ['',Validators.required]
+       Description: ['']
     });
 
     this.medicamentService.getMedications().subscribe((data)=>{
@@ -69,43 +72,62 @@ getMedicaments(medicaments){
   //make a fork join
   validateCalls(){
 
-      //telephone part
-      let telephone =  this.patientFormGroup.value.Telephone;
-      
-      let filter = `Telephone eq '${telephone}'`;
-      this.patientService.getPatientByTelephone(filter);
-
-
-      //license part
-      let license = this.patientFormGroup.value.DoctorLicense;
-      
-      let filterLicense = `license eq '${license}'`;
-
-      this.doctorService.getDoctorByLicense(filterLicense);
-            
-
-
-      console.log(this.selection);
+    console.log(this.selection);
 
       //get medication calls
       if(this.selection.selected.length === 0){
         this.success = false;
       }
-
-
     }
 
     //Generate content of the file
   generateContent():string{
-    return "test on how to break line '\n' after this line '\n' and after the other line.";
+    let content = "test on how to break line \n after this line \n and after the other line.";
+    return content;
+  }
+
+  patientEv(){
+
+   // console.log("next event");
+   let telephone =  this.patientFormGroup.value.Telephone;
+      
+   let filter = `Telephone eq '${telephone}'`;
+
+   this.patientService.getPatientByTelephone(filter).subscribe((data:any)=>{
+     if(data.length === 0){
+       //if data is empty set patient to null
+       this.patient = null;
+     }else{
+        this.patient = data[0];
+     }
+   
+   });
+
+   //license part
+   let license = this.patientFormGroup.value.DoctorLicense;
+   
+   let filterLicense = `license eq '${license}'`;
+
+   this.doctorService.getDoctorByLicense(filterLicense).subscribe((data:any)=>{
+        this.doctor = data[0];
+   });
+
+   console.log(this.doctor);
+   console.log(this.patient);
   }
 
   generateFile(){
-   // this.validateCalls();
+    this.validateCalls();
+    
     let line = this.generateContent();
     var blob = new Blob([line], {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(blob, "hello world.txt");
 
+  }
+
+  showData(){
+    console.log(this.patient);
+    console.log(this.doctor);
   }
 
 // table functionalities
